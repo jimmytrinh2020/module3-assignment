@@ -66,6 +66,11 @@ span{
   color: #BB66AA;
   font-style: italic;
 }
+.warning {
+  font-weight: normal;
+  color: red;
+  display: none;
+}
 .error {
   font-weight: bold;
   color: red;

@@ -12,7 +12,7 @@ function FoundListDirective() {
     templateUrl: 'foundItems.html',
     scope: {
       foundItems: '=',
-      title: '@myTitle',
+      message: '@',
       onRemove: '&'
     },
     controller: FoundListDirectiveController,
@@ -24,26 +24,26 @@ function FoundListDirective() {
 }
 
 function FoundListDirectiveLink(scope, element,attrs,controller) {
-  console.log("Link scope is: ", scope);
-  console.log("Link element is: ", element);
-  console.log("Link controller is: ", controller);
+  //console.log("Link scope is: ", scope);
+  //console.log("Link element is: ", element);
+  //console.log("Link controller is: ", controller);
   scope.$watch('menu.notFound()',function(newValue,oldValue){
       if (newValue == true) {
-        displayCookieWarning();
+        displayWarning();
       } else {
-        removeCookieWarning();
+        removeWarning();
       }
   });
-  function displayCookieWarning() {
+  function displayWarning() {
     // Using angular jqlite
     var warningElement = element.find("div");
     warningElement.css('display','block');
     console.log(warningElement);
   }
 
-  function removeCookieWarning() {
+  function removeWarning() {
     // Using angular jqlite
-    var warningElement = element.find("div.error");
+    var warningElement = element.find("div");
     warningElement.css('display','none');
   }
 }
@@ -51,15 +51,15 @@ function FoundListDirectiveLink(scope, element,attrs,controller) {
 function FoundListDirectiveController() {
   var menu = this;
   menu.notFound = function() {
-    return menu.foundItems.length === 0;
+   return menu.foundItems.length === 0;
   };
 }
 
 MenuItemController.$inject = ['MenuItemService'];
 function MenuItemController(MenuItemService) {
   var menu = this; // refers to this ShoppingListAddController
-  menu.search = "";
-  menu.title = "";
+  menu.searchTerm = "";
+  menu.message = "";
   menu.foundItems = [];
   var promise = MenuItemService.getMenuItems();
   promise
@@ -72,33 +72,28 @@ function MenuItemController(MenuItemService) {
   });
 
    menu.narrowItems = function () {
-     console.log("search: ", "'" + menu.search +"'");
-     menu.notFound = true;
+     console.log("search: ", "'" + menu.searchTerm +"'");
+     menu.found = false;
      menu.foundItems = [];
-     if (menu.search !== "") {
+     if (menu.searchTerm.trim() !== "") {
+       var search = menu.searchTerm.toLowerCase();
        for (var i=0; i<menu.items.length;i++) {
-       //console.log("i" + i + menu.items[i].name);
-       //name.toLowerCase().indexOf(menu.search) !== -1
-          if (menu.items[i].description.toLowerCase().indexOf(menu.search.toLowerCase()) !== -1) {
-            menu.foundItems.push(menu.items[i]);
-            menu.notFound = false;
-            //console.log(menu.items[i].name);
+         if (menu.items[i].description.toLowerCase().indexOf(search) !== -1) {
+           menu.foundItems.push(menu.items[i]);
+           menu.found = true;
           };
        };
+    };
+    if (menu.found) {
+      menu.message = "";
     } else {
-      menu.notFound = true;
-    }
-    if (menu.notFound) {
-      menu.title = "Nothing Found!"
-    } else {
-      menu.title = "";
-    }
+      menu.message = "Nothing Found!";
+    };
     //console.log(menu.foundList);
   };
 
   menu.removeItem = function (itemIndex) {
     menu.foundItems.splice(itemIndex, 1);
-    //menu.title = "Shopping List #1 (" + menu.foundList.length + " items)";
   };
 }
 
