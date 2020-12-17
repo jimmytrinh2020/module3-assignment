@@ -72,14 +72,14 @@ function MenuItemController(MenuItemService) {
   });
 
    menu.narrowItems = function () {
-     console.log("search: ", menu.search);
+     console.log("search: ", "'" + menu.search +"'");
      menu.notFound = true;
      menu.foundItems = [];
      if (menu.search !== "") {
        for (var i=0; i<menu.items.length;i++) {
        //console.log("i" + i + menu.items[i].name);
        //name.toLowerCase().indexOf(menu.search) !== -1
-          if (menu.items[i].name.toLowerCase().indexOf(menu.search.toLowerCase()) !== -1) {
+          if (menu.items[i].description.toLowerCase().indexOf(menu.search.toLowerCase()) !== -1) {
             menu.foundItems.push(menu.items[i]);
             menu.notFound = false;
             //console.log(menu.items[i].name);
