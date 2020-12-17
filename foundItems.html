@@ -1,0 +1,9 @@
+<h4 ng-hide="menu.foundItems.length == 0">{{menu.foundItems.length}} Items Found</h4>
+<ol>
+  <li ng-repeat="item in menu.foundItems">
+    <span class="short">({{item.short_name}})&nbsp</span><span>{{item.name}}:&nbsp</span>
+    <button ng-click="menu.onRemove({index:$index});">Don't want this one!</button>
+    <br><span class="description">&nbsp&nbsp&nbsp{{item.description}}</span>
+  </li>
+</ol>
+<div class="error" ng-if="menu.notFound">{{menu.title}}</div>
